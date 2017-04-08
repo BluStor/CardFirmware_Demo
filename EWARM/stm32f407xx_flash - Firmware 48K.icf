@@ -1,0 +1,56 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x08010200;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_ROM_start__    = 0x08000000;
+define symbol __ICFEDIT_region_ROM_end__      = 0x080FFFFF;
+define symbol __ICFEDIT_region_RAM_start__    = 0x20000000;
+define symbol __ICFEDIT_region_RAM_end__      = 0x2001FFFF;
+define symbol __ICFEDIT_region_CCMRAM_start__ = 0x10000000;
+define symbol __ICFEDIT_region_CCMRAM_end__   = 0x1000FFFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__ = 0x900;
+define symbol __ICFEDIT_size_heap__   = 0x3000;
+/**** End of ICF editor section. ###ICF###*/
+
+
+define memory mem with size = 4G;
+/* Bootloader */
+//define region BOOT_32K_region     = mem:[from __ICFEDIT_region_ROM_start__ to 0x08007FFF];
+define region BOOT_48K_region     = mem:[from __ICFEDIT_region_ROM_start__ to 0x0800BFFF];
+/* Saved parameters */
+//define region PARAM_32K_region    = mem:[from 0x08008000 to 0x0800BFFF];
+define region PARAM_48K_region    = mem:[from 0x0800C000 to 0x0800FFFF];
+/* Firmware HEADER */
+//define region HEADER_32K_region   = mem:[from 0x0800C000 to 0x0800C1FD];
+define region HEADER_48K_region   = mem:[from 0x08010000 to 0x080101FD];
+/* Localisation of Firmware CRC16 value */
+//define region CHKSUM_32K_region   = mem:[from 0x0800C1FE to 0x800C1FF];               // for use with 32K BOOT and HYBRIDE firmware
+define region CHKSUM_48K_region   = mem:[from 0x080101FE to 0x80101FF];             // for use with 48K BOOT
+/* Firmware location */
+//define region ROM_32K_region      = mem:[from 0x0800C200 to __ICFEDIT_region_ROM_end__];
+define region ROM_48K_region      = mem:[from 0x08010200 to __ICFEDIT_region_ROM_end__];
+
+define region RAM_region      = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
+define region CCMRAM_region   = mem:[from __ICFEDIT_region_CCMRAM_start__ to __ICFEDIT_region_CCMRAM_end__];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+
+
+place in ROM_48K_region   { readonly };
+place in RAM_region   { readwrite,
+                        block CSTACK, block HEAP };
+                        
+place in BOOT_48K_region { section .bootloader };
+keep { section .bootloader };
+
+place in CHKSUM_48K_region {section .checksum };
+keep { section .checksum };

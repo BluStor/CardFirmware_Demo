@@ -1,0 +1,18 @@
+*.s19
+*.bin	
+*.out
+*.bat
+*.xcl
+*.dep
+*.dbgdt
+*.wsdt
+*.dni
+*.wspos
+*.ewp
+**/EWARM/EVAL-Bootloader DEBUG/
+**/EWARM/EVAL-Firmware DEBUG/
+**/EWARM/GC010-Bootloader 48K BINARY_DEBUG/
+**/EWARM/GC010-Bootloader 48K DEBUG/
+**/EWARM/GC010-Firmware 48K BINARY/
+**/EWARM/GC010-Firmware 48K DEBUG/
+**/EWARM/GC010-Firmware DEBUG/
